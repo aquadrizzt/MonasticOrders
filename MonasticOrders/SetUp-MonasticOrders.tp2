@@ -1,0 +1,46 @@
+BACKUP ~MonasticOrders/backup~
+AUTHOR ~aquadrizzt@gmail.com~
+VERSION ~0.0~ 
+
+/* Language Settings */
+AUTO_TRA ~MonasticOrders/tra/%s~
+LANGUAGE ~English~ ~english~ ~MonasticOrders/tra/english/setup.tra~ 
+
+BEGIN ~Monastic Orders~  
+
+COPY_EXISTING ~sw1h01.itm~ ~override/qd_monk_main.qd~ 
+
+INCLUDE ~MonasticOrders/lib/fl#add_kit_ee.tpa~
+ 
+ADD_KIT ~QDMONK~ 
+	~QDMONK 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONK 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONK 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONK 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONK 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONK 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONK 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
+	~QDMONK 1 1 1 0 1 0~ //dualclas.2da
+	~MonasticOrders/data/BLANKCLAB.2da~ //CLAB
+	~K_T_H~ 
+	~0x00004000	4~ 
+	~FM0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @101
+	SAY @102
+	SAY @103
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@103)
+		STR_VAR
+			kit_name = QDMONK
+			hpclass = HPMONK
+			thiefscl = ~0 0 100 100 100 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+	END
+END 
+
+//patch weapon prof 

@@ -1,0 +1,23 @@
+@0 = ~Monastic Orders~ 
+
+@101 = ~monk~
+@102 = ~Monk~ 
+@103 = ~MONK: Monks are warriors who pursue perfection through contemplation as well as action. They are versatile fighters, especially skilled in combat without weapons or armor. The monk's focus and dedication to their path allows them to perform amazing feats. 
+
+Advantages: 
+- Has THAC0 equal to a Fighter of the same level. 
+- May add their Wisdom modifier to their Armor Class. 
+- May use Unarmed Strikes ability at will, which makes their unarmed attacks deal more damage, attack multiple times per round, and count as magical weapons. 
+- Hit Die: d8 
+
+Disadvantages: 
+- May only distribute 25 at 1st level and 15 skill points per level after 1st. 
+- May not invest points in Open Locks, Pick Pockets, Set Traps, or Detect Illusions. 
+- May not use Backstab or Remove Traps abilities. 
+- May not use or become Proficient with staves, shortbows or crossbows. 
+- May not become Proficient in any weapon styles. 
+- May not wear armor or helmets. 
+- May not equip shields. 
+
+Prime Requisites for Dual-Classing: Dexterity and Wisdom
+~  
