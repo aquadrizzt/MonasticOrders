@@ -14,15 +14,15 @@ INCLUDE ~MonasticOrders/lib/fl#add_kit_ee.tpa~
  
 ADD_KIT ~QDMONK~ 
 	~QDMONK 1 1 0 0 1 0 0 1~ //clasweap.2da
-	~QDMONK 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONK 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
 	~QDMONK 0 9 0 0 9 0~ //abclasrq.2da 
 	~QDMONK 0 0 0 0 0 0~ //abclsmod.2da
 	~QDMONK 0 17 0 0 17 0~ //abdcdsrq.2da
 	~QDMONK 0 15 0 0 15 0~ //abdcscrq.2da 
 	~QDMONK 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
-	~QDMONK 1 1 1 0 1 0~ //dualclas.2da
-	~MonasticOrders/data/BLANKCLAB.2da~ //CLAB
-	~K_T_H~ 
+	~QDMONK 1 1 1 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONK.2da~ //CLAB
+	~K_T_H K_T_E K_T_HE K_T_HL K_T_D K_T_G K_T_HO~ 
 	~0x00004000	4~ 
 	~FM0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
@@ -35,12 +35,186 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 		INT_VAR
 			briefdesc = RESOLVE_STR_REF(@103)
 		STR_VAR
-			kit_name = QDMONK
-			hpclass = HPMONK
+			kit_name = ~QDMONK~
+			hpclass = ~HPMONK~
 			thiefscl = ~0 0 100 100 100 0 0 0~ 
 			thiefskl = ~25 15~ 
 			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clsrcreq = ~1 0 0 0 0 0 0~
 	END
 END 
 
-//patch weapon prof 
+//Wisdom AC 
+//AC applied at character creation and at level up 
+COPY ~MonasticOrders/data/QDWISAC.spl~ ~override/QDWISAC.spl~ //wis check for AC bonus
+	 ~MonasticOrders/data/QDWISAC1.spl~ ~override/QDWISAC1.spl~ //+1 AC 
+
+//base AC bonuses 
+//monk fist 
+COPY ~MonasticOrders/data/QDMKAC9.spl~ ~override~ //base AC 9
+	 ~MonasticOrders/data/QDMKAC8.spl~ ~override~ //base AC 8
+	 ~MonasticOrders/data/QDMKAC7.spl~ ~override~ //base AC 7
+	 ~MonasticOrders/data/QDMKAC6.spl~ ~override~ //base AC 6
+	 ~MonasticOrders/data/QDMKAC5.spl~ ~override~ //base AC 5
+	 
+ACTION_IF (GAME_IS ~iwdee~) BEGIN 
+	COPY ~MonasticOrders/data/QDMFISTI.itm~ ~override/QDMFIST.itm~ //starting fist (1d6, 2 APR, +3 enchantment, fake 2H [until IWD is updated]) 
+		SAY NAME1 @1000
+		SAY NAME2 @1000
+END ELSE BEGIN 
+	COPY ~MonasticOrders/data/QDMFIST.itm~ ~override~ //starting fist (1d6, 2 APR, +3 enchantment, 2H) 
+		SAY NAME1 @1000
+		SAY NAME2 @1000
+END 
+	
+COPY ~MonasticOrders/data/QDFIST1.spl~ ~override~ //place qdmfist in weapon0
+
+//build item restrictions spell 
+// filters are: 
+// 1) is two-handed and classified as halberd/staff/spear/greatsword
+// 2) is armor and uses an armor animation (2a, 3a or 4a)
+// 3) is a shield and uses shield animations 
+// 4) is a helmet and has an animation (except wings and circlet) 
+COPY ~MonasticOrders/data/QDBLANK.spl~ ~override/QDMNKIR.spl~ 
+COPY_EXISTING_REGEXP GLOB ~.*\.itm~ ~override~ //copies all item files
+	PATCH_IF (SOURCE_SIZE > 0x71) BEGIN // avoid crashing on empty items
+		READ_BYTE 0x18 flags1
+		READ_SHORT 0x1c type 
+		READ_SHORT 0x22 anim 
+		TEXT_SPRINT res ~%SOURCE_RES%~
+		PATCH_IF ((type = 2) AND ((anim = 16690) OR (anim = 16691) OR (anim = 16692)) ) BEGIN 
+			INNER_ACTION BEGIN 
+				COPY_EXISTING ~QDMNKIR.spl~ ~override~ 
+					LPF ADD_SPELL_EFFECT INT_VAR opcode = 180 parameter1 = 9382 parameter2 = 0 target = 2 timing = 9 STR_VAR resource = EVAL ~%res%~  END
+			END 
+		END 
+		PATCH_IF ((flags1 BAND 0x2) AND ((type = 20) OR (type = 26) OR (type = 29) OR (type = 30)) ) BEGIN 
+			INNER_ACTION BEGIN 
+				COPY_EXISTING ~QDMNKIR.spl~ ~override~ 
+					LPF ADD_SPELL_EFFECT INT_VAR opcode = 180 parameter1 = 9382 parameter2 = 0 target = 2 timing = 9 STR_VAR resource = EVAL ~%res%~  END
+			END 
+		END 
+		PATCH_IF ((type = 12) AND ((anim = 12868) OR (anim = 13124) OR (anim = 13380) OR (anim = 12612) OR (anim = 12355) OR (anim = 12611) OR (anim = 12867) OR (anim = 13123) OR (anim = 13379) OR (anim = 13635) OR (anim = 13891) OR (anim = 14147)) ) BEGIN 
+			INNER_ACTION BEGIN 
+				COPY_EXISTING ~QDMNKIR.spl~ ~override~ 
+					LPF ADD_SPELL_EFFECT INT_VAR opcode = 180 parameter1 = 9382 parameter2 = 0 target = 2 timing = 9 STR_VAR resource = EVAL ~%res%~  END
+			END 
+		END 
+		PATCH_IF ((type = 7) AND ((anim != 8225) AND (anim != 16970) AND (anim != 22361) AND (anim != 22362))) BEGIN 
+			INNER_ACTION BEGIN 
+				COPY_EXISTING ~QDMNKIR.spl~ ~override~ 
+					LPF ADD_SPELL_EFFECT INT_VAR opcode = 180 parameter1 = 9382 parameter2 = 0 target = 2 timing = 9 STR_VAR resource = EVAL ~%res%~  END
+			END 
+		END 
+	END
+BUT_ONLY 
+
+COPY ~MonasticOrders/data/QDMNKTH.spl~ ~override~ //disable thievery
+
+//add monk animations for elves/shorties
+INCLUDE ~MonasticOrders/lib/argent77_anims.tpa~  //argent77 anims lib 
+
+//adding new anims			  
+COPY ~MonasticOrders/data/anims/male_elf~ ~override~ 
+	 ~MonasticOrders/data/anims/female_elf~ ~override~ 
+	 ~MonasticOrders/data/anims/male_short~ ~override~ 
+	 ~MonasticOrders/data/anims/female_short~ ~override~ 
+
+//male elf monk
+LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotEM = slot END
+	ACTION_IF (slotEM <= 0) BEGIN 
+		FAIL ~No anim slots~ 
+	END 
+
+LAF TO_HEX_NUMBER INT_VAR value = slotEM minDigits = 4 RET hexNumberEM = hexNumber END 
+APPEND ~animate.ids~ ~0x%hexNumberEM% QD_MONK_MALE_ELF~ UNLESS ~QD_MONK_MALE_ELF~ 
+CLEAR_IDS_MAP 
+COPY ~%MOD_FOLDER%/data/anims/QD_MALE_ELF_MONK.ini~ ~override/%hexNumberEM%.ini~
+
+//female elf monk
+LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotEF = slot END 
+	ACTION_IF (slotEF <= 0) BEGIN 
+		FAIL ~No anim slots~ 
+	END 
+
+LAF TO_HEX_NUMBER INT_VAR value = slotEF minDigits = 4 RET hexNumberEF = hexNumber  END 
+APPEND ~animate.ids~ ~0x%hexNumberEF% QD_MONK_FEMALE_ELF~ UNLESS ~QD_MONK_FEMALE_ELF~ 
+CLEAR_IDS_MAP 
+COPY ~%MOD_FOLDER%/data/anims/QD_FEMALE_ELF_MONK.ini~ ~override/%hexNumberEF%.ini~
+
+//male short monk
+LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotDM = slot  END 
+	ACTION_IF (slotDM <= 0) BEGIN 
+		FAIL ~No anim slots~ 
+	END 
+
+LAF TO_HEX_NUMBER INT_VAR value = slotDM minDigits = 4 RET hexNumberDM = hexNumber  END 
+APPEND ~animate.ids~ ~0x%hexNumberDM% QD_MONK_MALE_SHORT~ UNLESS ~QD_MONK_MALE_SHORT~ 
+CLEAR_IDS_MAP 
+COPY ~%MOD_FOLDER%/data/anims/QD_MALE_SHORT_MONK.ini~ ~override/%hexNumberDM%.ini~
+
+//female short monk
+LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotDF = slot END 
+	ACTION_IF (slotDF <= 0) BEGIN 
+		FAIL ~No anim slots~ 
+	END 
+
+LAF TO_HEX_NUMBER INT_VAR value = slotDF minDigits = 4 RET hexNumberDF = hexNumber  END 
+APPEND ~animate.ids~ ~0x%hexNumberDF% QD_MONK_FEMALE_SHORT~ UNLESS ~QD_MONK_FEMALE_SHORT~ 
+CLEAR_IDS_MAP 
+COPY ~%MOD_FOLDER%/data/anims/QD_FEMALE_SHORT_MONK.ini~ ~override/%hexNumberDF%.ini~
+
+//update animations 
+COPY ~MonasticOrders/data/QDMKANI.spl~ ~override~ //anim change spl
+	 ~MonasticOrders/data/QDMKADF.eff~ ~override~ //short female 
+	 ~MonasticOrders/data/QDMKADM.eff~ ~override~ //short male 
+	 ~MonasticOrders/data/QDMKAEF.eff~ ~override~ //elf female 
+	 ~MonasticOrders/data/QDMKAEM.eff~ ~override~ //elf male 
+	 ~MonasticOrders/data/QDMKAHF.eff~ ~override~ //human female 
+	 ~MonasticOrders/data/QDMKAHM.eff~ ~override~ //human male 
+	 
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override~ //short female 
+	WRITE_LONG 0x1c %slotDF%
+
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKADM_.eff~ //short male 
+	WRITE_LONG 0x1c %slotDM%
+	
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAEF_.eff~ //elf female 
+	WRITE_LONG 0x1c %slotEF%
+
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAEM_.eff~ //elf male 
+	WRITE_LONG 0x1c %slotEM%
+
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAHF_.eff~ //human female 
+	WRITE_LONG 0x1c 0x6510
+
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAHM_.eff~ //human male 
+	WRITE_LONG 0x1c 0x6500
+	
+COMPILE ~MonasticOrders/data/QDMKANI.baf~ //anim script
+
+//thac0 bonus (bumping to fighter thac0)
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 3 col thief // read column value
+		delta = %thief% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONK.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY
+
+COPY_EXISTING ~QDMONK.2da~ ~override~ //improve readability
+	PRETTY_PRINT_2DA 
