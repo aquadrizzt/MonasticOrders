@@ -1,6 +1,6 @@
 BACKUP ~MonasticOrders/backup~
 AUTHOR ~aquadrizzt@gmail.com~
-VERSION ~0.4~ 
+VERSION ~0.0~ 
 
 /* Language Settings */
 AUTO_TRA ~MonasticOrders/tra/%s~
@@ -584,7 +584,7 @@ BUT_ONLY
 
 //------------------------------------------------------
 // Multiclassing for Monks                              
-// - Monk: Any                                          
+// - Monk: Any (Gnomes: Illusionist)                                          
 // - Dark Moon: Illusionist                             
 // - Sun Soul: Fighter or Cleric                        
 //------------------------------------------------------
@@ -630,7 +630,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
 			clascolr = ~25 28 57 2 24~ 
-			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+			clsrcreq = ~1 0 0 0 0 0 0~ 
 	END
 END 
 
@@ -696,7 +696,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
 			clascolr = ~25 28 57 2 24~ 
-			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+			clsrcreq = ~1 0 0 0 0 0 0~ 
 	END
 END 
 
@@ -740,7 +740,7 @@ ADD_KIT ~QDMONK_M~
 	~QDMONK_M 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
 	~QDMONK_M 0 0 0 0 0 0~ //dualclas.2da
 	~MonasticOrders/data/QDMONK.2da~ //CLAB
-	~K_MT_H K_MT_E K_MT_HE K_MT_HL K_MT_D K_MT_G K_MT_HO~ 
+	~K_MT_H K_MT_E K_MT_HE K_MT_HL K_MT_D K_MT_HO~ 
 	~0x00004000	13~ 
 	~FM0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
@@ -762,7 +762,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
 			clascolr = ~25 28 57 2 24~ 
-			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+			clsrcreq = ~1 0 0 0 0 0 0~ 
 	END
 END 
 
@@ -795,6 +795,83 @@ LAF qd_multiclass
 		mc_dir = ~MonasticOrders/lib/qd_multi~ 
 END 
 
+//ILLUSIONIST/MONK [gnomes]
+ADD_KIT ~QDMONK_I~ 
+	~QDMONK_I 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONK_I 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONK_I 0 9 0 9 9 0~ //abclasrq.2da 
+	~QDMONK_I 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONK_I 0 17 0 17 17 0~ //abdcdsrq.2da
+	~QDMONK_I 0 15 0 15 15 0~ //abdcscrq.2da 
+	~QDMONK_I 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
+	~QDMONK_I 0 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONK.2da~ //CLAB
+	~K_MT_G~ 
+	~0x00000400	13~ 
+	~FM0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @319
+	SAY @320
+	SAY @321
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@321)
+		STR_VAR
+			kit_name = ~QDMONK_I~
+			hpclass = ~HPCM~
+			thiefscl = ~0 0 100 100 100 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clascolr = ~25 28 57 2 24~ 
+			clsrcreq = ~0 0 0 0 0 0 0~ 
+	END
+END 
+
+COPY ~MonasticOrders/data/QDMONK.2da~ ~override/QDMONK_I.2da~ 
+
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 12 col mt // read column value
+		delta = %mt% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONK_I.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY	
+
+LAF qd_multiclass
+	STR_VAR 
+		kit_name = ~QDMONK_I~ 
+		kit_clab = ~QDMONK_I~ 
+		base_class = ~T~ 
+		mc_dir = ~MonasticOrders/lib/qd_multi~ 
+END 
+
+//add illusionist abilities, if necessary
+ACTION_IF (FILE_EXISTS_IN_GAME ~CLABMA08.2da~) BEGIN 
+	LAF qd_multiclass
+		STR_VAR 
+			kit_name = ~QDMONK_I~ 
+			kit_clab = ~CLABMA08~ 
+			base_class = ~M~ 
+			mc_dir = ~MonasticOrders/lib/qd_multi~ 
+	END 
+END 
+
 //FIGHTER/MONK 
 ADD_KIT ~QDMONKSS_F~ 
 	~QDMONKSS_F 2 2 0 0 2 0 0 2~ //clasweap.2da
@@ -806,7 +883,7 @@ ADD_KIT ~QDMONKSS_F~
 	~QDMONKSS_F 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
 	~QDMONKSS_F 0 0 0 0 0 0~ //dualclas.2da
 	~MonasticOrders/data/QDMONK.2da~ //CLAB
-	~K_FT_H K_FT_E K_FT_HE K_FT_HL K_FT_D~ 
+	~K_FT_H K_FT_E K_FT_HE K_FT_HL K_FT_D K_FT_G K_FT_HO~ 
 	~0x00004000	9~ 
 	~MO0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
@@ -828,7 +905,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
 			clascolr = ~67 25 79 23 24~ 
-			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+			clsrcreq = ~1 0 0 0 0 0 0~ 
 	END
 END 
 
@@ -872,7 +949,7 @@ ADD_KIT ~QDMONKSS_C~
 	~QDMONKSS_C 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
 	~QDMONKSS_C 0 0 0 0 0 0~ //dualclas.2da
 	~MonasticOrders/data/QDMONK.2da~ //CLAB
-	~K_CT_H K_CT_E K_CT_HE K_CT_HL K_CT_D~ 
+	~K_CT_H K_CT_E K_CT_HE K_CT_HL K_CT_D K_CT_G K_CT_HO~ 
 	~0x00004000	15~ 
 	~FC0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
@@ -894,7 +971,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
 			clascolr = ~67 25 79 23 24~ 
-			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+			clsrcreq = ~1 0 0 0 0 0 0~ 
 	END
 END 
 
@@ -938,7 +1015,7 @@ ADD_KIT ~QDMONKDM_M~
 	~QDMONKDM_M 0 0 1 0 0 1 0 0 1~ //alignmnt.2da
 	~QDMONKDM_M 0 0 0 0 0 0~ //dualclas.2da
 	~MonasticOrders/data/QDMONK.2da~ //CLAB
-	~K_MT_H K_MT_E K_MT_HE K_MT_HO~ 
+	~K_MT_H K_MT_E K_MT_HE K_MT_HO K_MT_HL K_MT_G K_MT_D~ 
 	~0x00000400	13~ 
 	~FM0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
@@ -960,7 +1037,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
 			clascolr = ~25 83 66 28 23~ 
-			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+			clsrcreq = ~1 0 0 0 0 0 0~ 
 	END
 END 
 
@@ -1004,6 +1081,80 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~CLABMA08.2da~) BEGIN
 	END 
 END 
 
+ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_races.qd~) BEGIN 
+	COPY_EXISTING ~clsrcreq.2da~ ~override~ 
+		READ_2DA_ENTRIES_NOW clsrcreq 8
+		FOR (i = 1; i < clsrcreq; ++i) BEGIN
+			READ_2DA_ENTRY_FORMER clsrcreq i 0 kit
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONK_F~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+			END 
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONK_C~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+			END 
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONK_M~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+			END
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONK_I~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+			END
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKSS_F~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+			END
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKSS_C~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+			END
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKDM_M~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+			END
+		END
+		SET_2DA_ENTRIES_NOW ~qd_clsrcreq~ 8
+	BUT_ONLY 
+END 
+
+
 //------------------------------------------------------
 // New Kits                                             
 // - Hin Fist: G/N Halflings with improved crit         
@@ -1031,7 +1182,7 @@ ADD_KIT ~QDMONKHF~
 	~QDMONKHF 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
 	~QDMONKHF 1 0 0 0 0 0~ //dualclas.2da
 	~MonasticOrders/data/QDMONKHF.2da~ //CLAB
-	~K_T_HL K_T_D K_T_G~ 
+	~K_T_H K_T_E K_T_HE K_T_HL K_T_D K_T_G K_T_HO~
 	~0x00004000	4~ 
 	~MO0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
@@ -1052,7 +1203,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
-			//clsrcreq = ~1 0 0 0 0 0 0~
+			clsrcreq = ~0 0 0 0 0 0 0~ //no race availability unless patched with Expanded Races
 	END
 END 
 
@@ -1081,7 +1232,7 @@ ADD_KIT ~QDMONKSH~
 	~QDMONKSH 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
 	~QDMONKSH 0 0 1 0 0 0~ //dualclas.2da
 	~MonasticOrders/data/QDMONKSH.2da~ //CLAB
-	~K_T_H K_T_E K_T_HE~ 
+	~K_T_H K_T_E K_T_HE K_T_HL K_T_D K_T_G K_T_HO~
 	~0x00004000	4~ 
 	~MO0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
@@ -1102,7 +1253,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
-			//clsrcreq = ~1 0 0 0 0 0 0~
+			clsrcreq = ~1 0 0 0 0 0 0~
 	END
 END 		
 
@@ -1171,7 +1322,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
-			//clsrcreq = ~1 0 0 0 0 0 0~
+			clsrcreq = ~1 0 0 0 0 0 0~
 	END
 END 
 
@@ -1200,7 +1351,7 @@ ADD_KIT ~QDMONKBO~
 	~QDMONKBO 1 0 0 1 0 0 1 0 0~ //alignmnt.2da
 	~QDMONKBO 1 1 0 0 0 0~ //dualclas.2da
 	~MonasticOrders/data/QDMONKBO.2da~ //CLAB
-	~K_T_H K_T_D K_T_HO~ 
+	~K_T_H K_T_E K_T_HE K_T_HL K_T_D K_T_G K_T_HO~
 	~0x00004000	4~ 
 	~MO0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
@@ -1221,7 +1372,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
-			//clsrcreq = ~1 0 0 0 0 0 0~
+			clsrcreq = ~1 0 0 0 0 0 0~
 	END
 END 	
 
@@ -1268,6 +1419,54 @@ COPY_EXISTING ~thac0.2da~ ~override~
 	END
 BUT_ONLY	
 
+
+//Expanded Races 
+ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_races.qd~) BEGIN 
+	COPY_EXISTING ~clsrcreq.2da~ ~override~ 
+		READ_2DA_ENTRIES_NOW clsrcreq 8
+		FOR (i = 1; i < clsrcreq; ++i) BEGIN
+			READ_2DA_ENTRY_FORMER clsrcreq i 0 kit
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKHF~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+			END 
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKSH~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+			END 
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKLD~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+			END
+			PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKBO~) BEGIN 
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+				SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+			END
+		END
+		SET_2DA_ENTRIES_NOW ~qd_clsrcreq~ 8
+	BUT_ONLY 
+END 
+
 //MULTICLASS KITS 
 //HF: F
 //SH: M
@@ -1287,7 +1486,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 		~QDMONKHF_F 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
 		~QDMONKHF_F 0 0 0 0 0 0~ //dualclas.2da
 		~MonasticOrders/data/QDMONKHF.2da~ //CLAB
-		~K_FT_HL K_FT_D K_FT_G~ 
+		~K_FT_H K_FT_E K_FT_HE K_FT_HL K_FT_D K_FT_G K_FT_HO~  
 		~0x00004000	9~ 
 		~MO0~ 
 		~* * * * * * * * * * * * * * * * * * * *~
@@ -1308,7 +1507,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 				traplimt = ~0~
-				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+				clsrcreq = ~0 0 0 0 0 0 0~ 
 		END
 	END 
 
@@ -1353,7 +1552,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 		~QDMONKSH_M 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
 		~QDMONKSH_M 0 0 0 0 0 0~ //dualclas.2da
 		~MonasticOrders/data/QDMONK.2da~ //CLAB
-		~K_MT_H K_MT_E K_MT_HE~ 
+		~K_MT_H K_MT_E K_MT_HE K_MT_HO K_MT_HL K_MT_G K_MT_D~  
 		~0x00004000	13~ 
 		~FM0~ 
 		~* * * * * * * * * * * * * * * * * * * *~
@@ -1374,7 +1573,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 				traplimt = ~0~
-				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+				clsrcreq = ~1 0 0 0 0 0 0~ 
 		END
 	END 
 
@@ -1439,7 +1638,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 				traplimt = ~0~
-				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+				clsrcreq = ~1 0 0 0 0 0 0~ 
 		END
 	END 
 
@@ -1483,7 +1682,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 		~QDMONKBO_F 1 0 0 1 0 0 1 0 0~ //alignmnt.2da
 		~QDMONKBO_F 0 0 0 0 0 0~ //dualclas.2da
 		~MonasticOrders/data/QDMONK.2da~ //CLAB
-		~K_FT_H K_FT_D K_FT_HO~ 
+		~K_FT_H K_FT_E K_FT_HE K_FT_HL K_FT_D K_FT_G K_FT_HO~  
 		~0x00004000	9~ 
 		~MO0~ 
 		~* * * * * * * * * * * * * * * * * * * *~
@@ -1504,7 +1703,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 				traplimt = ~0~
-				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+				clsrcreq = ~1 0 0 0 0 0 0~ 
 		END
 	END 
 
@@ -1548,7 +1747,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 		~QDMONKBO_C 1 0 0 1 0 0 1 0 0~ //alignmnt.2da
 		~QDMONKBO_C 0 0 0 0 0 0~ //dualclas.2da
 		~MonasticOrders/data/QDMONK.2da~ //CLAB
-		~K_CT_H K_CT_D K_CT_HO~ 
+		~K_CT_H K_CT_E K_CT_HE K_CT_HL K_CT_D K_CT_G K_CT_HO~ 
 		~0x00004000	15~ 
 		~FC0~ 
 		~* * * * * * * * * * * * * * * * * * * *~
@@ -1569,7 +1768,7 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
 				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 				traplimt = ~0~
-				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+				clsrcreq = ~1 0 0 0 0 0 0~ 
 		END
 	END 
 
@@ -1600,6 +1799,61 @@ ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN
 			kit_clab = ~QDMONKBO_C~ 
 			base_class = ~T~ 
 			mc_dir = ~MonasticOrders/lib/qd_multi~ 
+	END 
+	
+	ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_races.qd~) BEGIN 
+		COPY_EXISTING ~clsrcreq.2da~ ~override~ 
+			READ_2DA_ENTRIES_NOW clsrcreq 8
+			FOR (i = 1; i < clsrcreq; ++i) BEGIN
+				READ_2DA_ENTRY_FORMER clsrcreq i 0 kit
+				PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKHF_F~) BEGIN 
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+				END 
+				PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKSH_M~) BEGIN 
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+				END 
+				PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKLD_F~) BEGIN 
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+				END
+				PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKBO_F~) BEGIN 
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+				END
+				PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKBO_C~) BEGIN 
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+					SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+				END
+			END
+			SET_2DA_ENTRIES_NOW ~qd_clsrcreq~ 8
+		BUT_ONLY 
 	END 
 END 
 
