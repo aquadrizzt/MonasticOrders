@@ -534,6 +534,19 @@ COPY_EXISTING_REGEXP GLOB ~RASAAD.*\.cre~ ~override~
 	END
 BUT_ONLY
 
+//minor patches to items to allow monks (and other thieves)
+ACTION_FOR_EACH itm IN ~OHBRAC01~ ~OHBRAC02~ ~WANINJA~ ~BDBRAC01~ ~OHRELM1~ BEGIN 
+	ACTION_IF (FILE_EXISTS_IN_GAME ~%itm%.itm~) BEGIN 
+		COPY_EXISTING ~%itm%.itm~ ~override~ 
+			WRITE_LONG 0x1e 1077214656 //open up alignments and thieves
+	END 
+END 
+
+ACTION_IF (FILE_EXISTS_IN_GAME ~HELM34.itm~) BEGIN //wong fei stone
+	COPY_EXISTING ~HELM34.itm~ ~override~ 
+		WRITE_LONG 0x1e 1077151168 //open up thieves
+END 
+
 //------------------------------------------------------
 // Expanded Races for Monks                             
 // - Monk: Any                                          
