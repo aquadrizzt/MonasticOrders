@@ -1,6 +1,6 @@
 BACKUP ~MonasticOrders/backup~
 AUTHOR ~aquadrizzt@gmail.com~
-VERSION ~0.0~ 
+VERSION ~0.4~ 
 
 /* Language Settings */
 AUTO_TRA ~MonasticOrders/tra/%s~
