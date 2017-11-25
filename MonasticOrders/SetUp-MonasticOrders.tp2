@@ -511,6 +511,29 @@ COPY_EXISTING ~clsrcreq.2da~ ~override~
 	SET_2DA_ENTRIES_NOW ~qd_clsrcreq~ 8
 BUT_ONLY
 
+//patching RASAAD 
+
+COPY_EXISTING ~kitlist.2da~ ~override~
+	COUNT_2DA_ROWS ~10~ "rows"
+	FOR ( index = 1 ; index < rows ; index = index + 1 ) BEGIN
+		READ_2DA_ENTRY %index% 1 10 kit_name
+		PATCH_IF (~%kit_name%~ STRING_EQUAL ~QDMONKSS~) BEGIN 
+			READ_2DA_ENTRY %index% 9 10 ss_kit_code
+		END 		
+	END
+BUT_ONLY
+
+COPY_EXISTING_REGEXP GLOB ~RASAAD.*\.cre~ ~override~
+	PATCH_IF ~SOURCE_SIZE~ > 0x2cc BEGIN
+		REMOVE_CRE_EFFECTS 
+		REMOVE_KNOWN_SPELLS
+		REMOVE_MEMORIZED_SPELLS 
+		WRITE_BYTE 0x273 4 //change rasaad to thief
+		WRITE_SHORT 0x246 %ss_kit_code%
+		ADD_CRE_ITEM ~qdmfist~ #0 #0 #0 ~undroppable~ ~weapon1~
+	END
+BUT_ONLY
+
 //------------------------------------------------------
 // Expanded Races for Monks                             
 // - Monk: Any                                          
