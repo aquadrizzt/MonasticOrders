@@ -6,7 +6,14 @@ VERSION ~0.0~
 AUTO_TRA ~MonasticOrders/tra/%s~
 LANGUAGE ~English~ ~english~ ~MonasticOrders/tra/english/setup.tra~ 
 
-BEGIN ~Monastic Orders~  
+//------------------------------------------------------
+// Core Component                                       
+// - Revises Monk abilities/progression                 
+// - Converts Monks to a Thief kit                      
+//                                                      
+//------------------------------------------------------
+BEGIN @100
+REQUIRE_PREDICATE (ENGINE_IS ~bgee bg2ee iwdee eet~) @10 
 
 COPY_EXISTING ~sw1h01.itm~ ~override/qd_monk_main.qd~ 
 
@@ -24,7 +31,7 @@ ADD_KIT ~QDMONK~
 	~MonasticOrders/data/QDMONK.2da~ //CLAB
 	~K_T_H K_T_E K_T_HE K_T_HL K_T_D K_T_G K_T_HO~ 
 	~0x00004000	4~ 
-	~FM0~ 
+	~MO0~ 
 	~* * * * * * * * * * * * * * * * * * * *~
 	SAY @101
 	SAY @102
@@ -44,6 +51,7 @@ ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
 			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
 			traplimt = ~0~
 			clsrcreq = ~1 0 0 0 0 0 0~
+			clascolr = ~25 28 57 2 24~ 
 	END
 END 
 
@@ -62,12 +70,12 @@ COPY ~MonasticOrders/data/QDMKAC9.spl~ ~override~ //base AC 9
 	 
 ACTION_IF (GAME_IS ~iwdee~) BEGIN 
 	COPY ~MonasticOrders/data/QDMFISTI.itm~ ~override/QDMFIST.itm~ //starting fist (1d6, 2 APR, +3 enchantment, fake 2H [until IWD is updated]) 
-		SAY NAME1 @1000
-		SAY NAME2 @1000
+		SAY NAME1 @104
+		SAY NAME2 @104
 END ELSE BEGIN 
 	COPY ~MonasticOrders/data/QDMFIST.itm~ ~override~ //starting fist (1d6, 2 APR, +3 enchantment, 2H) 
-		SAY NAME1 @1000
-		SAY NAME2 @1000
+		SAY NAME1 @104
+		SAY NAME2 @104
 END 
 	
 COPY ~MonasticOrders/data/QDFIST1.spl~ ~override~ //place qdmfist in weapon0
@@ -145,27 +153,71 @@ APPEND ~animate.ids~ ~0x%hexNumberEF% QD_MONK_FEMALE_ELF~ UNLESS ~QD_MONK_FEMALE
 CLEAR_IDS_MAP 
 COPY ~%MOD_FOLDER%/data/anims/QD_FEMALE_ELF_MONK.ini~ ~override/%hexNumberEF%.ini~
 
-//male short monk
+//male dwarf monk
 LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotDM = slot  END 
 	ACTION_IF (slotDM <= 0) BEGIN 
 		FAIL ~No anim slots~ 
 	END 
 
 LAF TO_HEX_NUMBER INT_VAR value = slotDM minDigits = 4 RET hexNumberDM = hexNumber  END 
-APPEND ~animate.ids~ ~0x%hexNumberDM% QD_MONK_MALE_SHORT~ UNLESS ~QD_MONK_MALE_SHORT~ 
+APPEND ~animate.ids~ ~0x%hexNumberDM% QD_MONK_MALE_DWARF~ UNLESS ~QD_MONK_MALE_DWARF~ 
 CLEAR_IDS_MAP 
-COPY ~%MOD_FOLDER%/data/anims/QD_MALE_SHORT_MONK.ini~ ~override/%hexNumberDM%.ini~
+COPY ~%MOD_FOLDER%/data/anims/QD_MALE_DWARF_MONK.ini~ ~override/%hexNumberDM%.ini~
 
-//female short monk
+//female dwarf monk
 LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotDF = slot END 
 	ACTION_IF (slotDF <= 0) BEGIN 
 		FAIL ~No anim slots~ 
 	END 
 
 LAF TO_HEX_NUMBER INT_VAR value = slotDF minDigits = 4 RET hexNumberDF = hexNumber  END 
-APPEND ~animate.ids~ ~0x%hexNumberDF% QD_MONK_FEMALE_SHORT~ UNLESS ~QD_MONK_FEMALE_SHORT~ 
+APPEND ~animate.ids~ ~0x%hexNumberDF% QD_MONK_FEMALE_DWARF~ UNLESS ~QD_MONK_FEMALE_DWARF~ 
 CLEAR_IDS_MAP 
-COPY ~%MOD_FOLDER%/data/anims/QD_FEMALE_SHORT_MONK.ini~ ~override/%hexNumberDF%.ini~
+COPY ~%MOD_FOLDER%/data/anims/QD_FEMALE_DWARF_MONK.ini~ ~override/%hexNumberDF%.ini~
+
+//male gnome monk
+LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotGM = slot  END 
+	ACTION_IF (slotGM <= 0) BEGIN 
+		FAIL ~No anim slots~ 
+	END 
+
+LAF TO_HEX_NUMBER INT_VAR value = slotGM minDigits = 4 RET hexNumberGM = hexNumber  END 
+APPEND ~animate.ids~ ~0x%hexNumberGM% QD_MONK_MALE_GNOME~ UNLESS ~QD_MONK_MALE_GNOME~ 
+CLEAR_IDS_MAP 
+COPY ~%MOD_FOLDER%/data/anims/QD_MALE_GNOME_MONK.ini~ ~override/%hexNumberGM%.ini~
+
+//female gnome monk
+LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotGF = slot END 
+	ACTION_IF (slotGF <= 0) BEGIN 
+		FAIL ~No anim slots~ 
+	END 
+
+LAF TO_HEX_NUMBER INT_VAR value = slotGF minDigits = 4 RET hexNumberGF = hexNumber  END 
+APPEND ~animate.ids~ ~0x%hexNumberGF% QD_MONK_FEMALE_GNOME~ UNLESS ~QD_MONK_FEMALE_GNOME~ 
+CLEAR_IDS_MAP 
+COPY ~%MOD_FOLDER%/data/anims/QD_FEMALE_GNOME_MONK.ini~ ~override/%hexNumberGF%.ini~
+
+//male halfling monk
+LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotLM = slot  END 
+	ACTION_IF (slotLM <= 0) BEGIN 
+		FAIL ~No anim slots~ 
+	END 
+
+LAF TO_HEX_NUMBER INT_VAR value = slotLM minDigits = 4 RET hexNumberLM = hexNumber  END 
+APPEND ~animate.ids~ ~0x%hexNumberLM% QD_MONK_MALE_HALFLING~ UNLESS ~QD_MONK_MALE_HALFLING~ 
+CLEAR_IDS_MAP 
+COPY ~%MOD_FOLDER%/data/anims/QD_MALE_HALFLING_MONK.ini~ ~override/%hexNumberLM%.ini~
+
+//female halfling monk
+LAF FIND_FREE_ANIM_SLOT INT_VAR slotMin = 0x6000 slotMax = 0x6fff RET slotLF = slot END 
+	ACTION_IF (slotLF <= 0) BEGIN 
+		FAIL ~No anim slots~ 
+	END 
+
+LAF TO_HEX_NUMBER INT_VAR value = slotLF minDigits = 4 RET hexNumberLF = hexNumber  END 
+APPEND ~animate.ids~ ~0x%hexNumberLF% QD_MONK_FEMALE_HALFLING~ UNLESS ~QD_MONK_FEMALE_HALFLING~ 
+CLEAR_IDS_MAP 
+COPY ~%MOD_FOLDER%/data/anims/QD_FEMALE_HALFLING_MONK.ini~ ~override/%hexNumberLF%.ini~
 
 //update animations 
 COPY ~MonasticOrders/data/QDMKANI.spl~ ~override~ //anim change spl
@@ -175,11 +227,15 @@ COPY ~MonasticOrders/data/QDMKANI.spl~ ~override~ //anim change spl
 	 ~MonasticOrders/data/QDMKAEM.eff~ ~override~ //elf male 
 	 ~MonasticOrders/data/QDMKAHF.eff~ ~override~ //human female 
 	 ~MonasticOrders/data/QDMKAHM.eff~ ~override~ //human male 
+	 ~MonasticOrders/data/QDMKAGF.eff~ ~override~ //gnome female 
+	 ~MonasticOrders/data/QDMKAGM.eff~ ~override~ //gnome male 
+	 ~MonasticOrders/data/QDMKALF.eff~ ~override~ //halfling female 
+	 ~MonasticOrders/data/QDMKALM.eff~ ~override~ //halfling male 
 	 
-COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override~ //short female 
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override~ //dwarf female 
 	WRITE_LONG 0x1c %slotDF%
 
-COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKADM_.eff~ //short male 
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKADM_.eff~ //dwarf male 
 	WRITE_LONG 0x1c %slotDM%
 	
 COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAEF_.eff~ //elf female 
@@ -193,8 +249,190 @@ COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAHF_.eff~ //human female
 
 COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAHM_.eff~ //human male 
 	WRITE_LONG 0x1c 0x6500
+
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAGF_.eff~ //gnome female 
+	WRITE_LONG 0x1c %slotGF%
+
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKAGM_.eff~ //gnome male 
+	WRITE_LONG 0x1c %slotGM%
+	
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKALF_.eff~ //elf female 
+	WRITE_LONG 0x1c %slotLF%
+
+COPY ~MonasticOrders/data/QDMKADF_.eff~ ~override/QDMKALM_.eff~ //elf male 
+	WRITE_LONG 0x1c %slotLM%
 	
 COMPILE ~MonasticOrders/data/QDMKANI.baf~ //anim script
+
+COPY_EXISTING ~QDMONK.2da~ ~override~ //improve readability
+	PRETTY_PRINT_2DA 
+
+//Fighting Styles
+COPY ~MonasticOrders/data/QDMKFS.spl~ ~override~ //fighting style innate base
+		SAY NAME1 @106
+		SAY NAME2 @106 
+		SAY UNIDENTIFIED_DESC @107 
+		SAY IDENTIFIED_DESC @107 
+
+COPY ~MonasticOrders/data/QDMKFS.2da~ ~override~ //fighting style table base
+	
+COPY ~MonasticOrders/data/QDMKFS1.spl~ ~override~ //flurry of blows
+		SAY NAME1 @108
+		SAY NAME2 @108 
+		SAY UNIDENTIFIED_DESC @109
+		SAY IDENTIFIED_DESC @109 
+		
+COPY ~MonasticOrders/data/QDMKFS2.spl~ ~override~ //ki strike
+		SAY NAME1 @110
+		SAY NAME2 @110 
+		SAY UNIDENTIFIED_DESC @111
+		SAY IDENTIFIED_DESC @111 
+
+COPY ~MonasticOrders/data/QDMKFS3.spl~ ~override~ //stunning blows
+		SAY NAME1 @112
+		SAY NAME2 @112 
+		SAY UNIDENTIFIED_DESC @113
+		SAY IDENTIFIED_DESC @113 		
+		
+COPY ~MonasticOrders/data/QDMKFS3.eff~ ~override~ //stunning blows effect
+COPY ~MonasticOrders/data/QDMKFS3_.spl~ ~override~ //stunning blows subspl
+
+//Defense Modes 
+COPY ~MonasticOrders/data/QDMKDF.spl~ ~override~ //defense style innate base
+		SAY NAME1 @114
+		SAY NAME2 @114 
+		SAY UNIDENTIFIED_DESC @115
+		SAY IDENTIFIED_DESC @115 
+
+COPY ~MonasticOrders/data/QDMKDF.2da~ ~override~ //defense style table base
+		
+COPY ~MonasticOrders/data/QDMKDF1.spl~ ~override~ //stillness of mind 
+		SAY NAME1 @116
+		SAY NAME2 @116 
+		SAY UNIDENTIFIED_DESC @117
+		SAY IDENTIFIED_DESC @117
+
+COPY ~MonasticOrders/data/QDMKDF2.spl~ ~override~ //purity of body
+		SAY NAME1 @118
+		SAY NAME2 @118 
+		SAY UNIDENTIFIED_DESC @119
+		SAY IDENTIFIED_DESC @119
+
+COPY ~MonasticOrders/data/QDMKDF3.spl~ ~override~ //lignting reflexes
+		SAY NAME1 @120
+		SAY NAME2 @120 
+		SAY UNIDENTIFIED_DESC @121
+		SAY IDENTIFIED_DESC @121
+
+COPY ~MonasticOrders/data/QDMKDF4.spl~ ~override~ //deflect missiles
+		SAY NAME1 @122
+		SAY NAME2 @122 
+		SAY UNIDENTIFIED_DESC @123
+		SAY IDENTIFIED_DESC @123	
+		
+//SUN SOUL 
+ADD_KIT ~QDMONKSS~ 
+	~QDMONKSS 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONKSS 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKSS 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONKSS 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKSS 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONKSS 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONKSS 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
+	~QDMONKSS 1 1 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONKSS.2da~ //CLAB
+	~K_T_H K_T_E K_T_HE K_T_HL K_T_D K_T_G K_T_HO~ 
+	~0x00004000	4~ 
+	~MO0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @136
+	SAY @137
+	SAY @138
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@138)
+		STR_VAR
+			kit_name = ~QDMONKSS~
+			hpclass = ~HPMONK~
+			thiefscl = ~0 0 100 0 0 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clsrcreq = ~1 0 0 0 0 0 0~
+			clascolr = ~67 25 79 23 24~ 
+	END
+END 
+
+COPY ~MonasticOrders/data/QDMNKST.spl~ ~override~ //no stealth
+
+COPY ~MonasticOrders/data/QDSSFS.spl~ ~override~ //fighting style innate sunsoul
+		SAY NAME1 @106
+		SAY NAME2 @106 
+		SAY UNIDENTIFIED_DESC @130 
+		SAY IDENTIFIED_DESC @130 
+
+COPY ~MonasticOrders/data/QDSSFS.2da~ ~override~ //fighting style table sunsoul
+
+COPY ~MonasticOrders/data/QDSSFS2.spl~ ~override~ //purifying strike
+		SAY NAME1 @132
+		SAY NAME2 @132 
+		SAY UNIDENTIFIED_DESC @133
+		SAY IDENTIFIED_DESC @133
+		
+COPY ~MonasticOrders/data/QDSSDF.spl~ ~override~ //defense style innate sunsoul
+		SAY NAME1 @114
+		SAY NAME2 @114 
+		SAY UNIDENTIFIED_DESC @131
+		SAY IDENTIFIED_DESC @131 
+
+COPY ~MonasticOrders/data/QDSSDF.2da~ ~override~ //defense style table sunsoul
+
+COPY ~MonasticOrders/data/QDSSDF3.spl~ ~override~ //unbroken soul
+		SAY NAME1 @134
+		SAY NAME2 @134 
+		SAY UNIDENTIFIED_DESC @135
+		SAY IDENTIFIED_DESC @135 
+		
+//DARK MOON 	
+ADD_KIT ~QDMONKDM~ 
+	~QDMONKDM 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONKDM 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKDM 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONKDM 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKDM 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONKDM 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONKDM 0 0 1 0 0 1 0 0 1~ //alignmnt.2da
+	~QDMONKDM 0 0 1 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONKDM.2da~ //CLAB
+	~K_T_H K_T_E K_T_HE K_T_HL K_T_D K_T_G K_T_HO~ 
+	~0x00004000	4~ 
+	~MO0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @146
+	SAY @147
+	SAY @148
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@148)
+		STR_VAR
+			kit_name = ~QDMONKDM~
+			hpclass = ~HPMONK~
+			thiefscl = ~0 0 0 100 100 100 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clsrcreq = ~1 0 0 0 0 0 0~
+			clascolr = ~25 83 66 28 23~ 
+	END
+END 
 
 //thac0 bonus (bumping to fighter thac0)
 COPY_EXISTING ~thac0.2da~ ~override~ 
@@ -211,10 +449,1185 @@ COPY_EXISTING ~thac0.2da~ ~override~
 				COPY_EXISTING ~QDMONK.2da~ ~override~
 					COUNT_2DA_COLS clabcols
 					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				COPY_EXISTING ~QDMONKSS.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				COPY_EXISTING ~QDMONKDM.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
 			END 
 		END
 	END
+BUT_ONLY	
+
+COPY ~MonasticOrders/data/QDDMFS.spl~ ~override~ //fighting style innate darkmoon
+		SAY NAME1 @106
+		SAY NAME2 @106 
+		SAY UNIDENTIFIED_DESC @140 
+		SAY IDENTIFIED_DESC @140 
+
+COPY ~MonasticOrders/data/QDDMFS.2da~ ~override~ //fighting style table darkmoon
+
+COPY ~MonasticOrders/data/QDDMFS3.spl~ ~override~ //hands of shadow
+		SAY NAME1 @142
+		SAY NAME2 @142 
+		SAY UNIDENTIFIED_DESC @143
+		SAY IDENTIFIED_DESC @143
+		
+COPY ~MonasticOrders/data/QDDMDF.spl~ ~override~ //defense style innate darkmoon
+		SAY NAME1 @114
+		SAY NAME2 @114 
+		SAY UNIDENTIFIED_DESC @141
+		SAY IDENTIFIED_DESC @141 
+
+COPY ~MonasticOrders/data/QDDMDF.2da~ ~override~ //defense style table sunsoul
+
+COPY ~MonasticOrders/data/QDDMDF4.spl~ ~override~ //dark mirror
+		SAY NAME1 @144
+		SAY NAME2 @144 
+		SAY UNIDENTIFIED_DESC @145
+		SAY IDENTIFIED_DESC @145 
+		
+COPY ~MonasticOrders/data/QDDMDF4.eff~ ~override~ //dark mirror eff
+
+//removing monks via clsrcreq.2da 
+COPY_EXISTING ~clsrcreq.2da~ ~override~ 
+	READ_2DA_ENTRIES_NOW clsrcreq 8
+	FOR (i = 1; i < clsrcreq; ++i) BEGIN
+		READ_2DA_ENTRY_FORMER clsrcreq i 0 kit
+		PATCH_IF ((~%kit%~ STRING_EQUAL ~MONK~) OR 
+				  (~%kit%~ STRING_EQUAL ~SUN_SOUL~) OR 
+				  (~%kit%~ STRING_EQUAL ~DARK_MOON~)) BEGIN 
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+		END 
+		
+	END
+	SET_2DA_ENTRIES_NOW ~qd_clsrcreq~ 8
 BUT_ONLY
 
-COPY_EXISTING ~QDMONK.2da~ ~override~ //improve readability
-	PRETTY_PRINT_2DA 
+//------------------------------------------------------
+// Expanded Races for Monks                             
+// - Monk: Any                                          
+// - Dark Moon: Human, Half-Elf, Elf, Half-Orc          
+// - Sun Soul: Any except Half-Orc and Gnome            
+//------------------------------------------------------
+BEGIN @200
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~qd_monk_main.qd~) @11 
+REQUIRE_PREDICATE (ENGINE_IS ~bgee bg2ee iwdee eet~) @10 
+
+COPY_EXISTING ~sw1h01.itm~ ~override/qd_monk_races.qd~ 
+
+//removing monks via clsrcreq.2da 
+COPY_EXISTING ~clsrcreq.2da~ ~override~ 
+	READ_2DA_ENTRIES_NOW clsrcreq 8
+	FOR (i = 1; i < clsrcreq; ++i) BEGIN
+		READ_2DA_ENTRY_FORMER clsrcreq i 0 kit
+		PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONK~) BEGIN 
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+		END 
+		PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKSS~) BEGIN 
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 0
+		END 
+		PATCH_IF (~%kit%~ STRING_EQUAL ~QDMONKDM~) BEGIN 
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 1 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 2 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 3 1
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 4 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 5 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 6 0
+			SET_2DA_ENTRY_LATER ~qd_clsrcreq~ i 7 1
+		END
+	END
+	SET_2DA_ENTRIES_NOW ~qd_clsrcreq~ 8
+BUT_ONLY 
+
+//------------------------------------------------------
+// Multiclassing for Monks                              
+// - Monk: Any                                          
+// - Dark Moon: Illusionist                             
+// - Sun Soul: Fighter or Cleric                        
+//------------------------------------------------------
+BEGIN @300
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~qd_monk_main.qd~) @11 
+REQUIRE_PREDICATE (ENGINE_IS ~bgee bg2ee iwdee eet~) @10 
+
+COPY_EXISTING ~sw1h01.itm~ ~override/qd_monk_multi.qd~ 
+
+INCLUDE ~MonasticOrders/lib/qd_multiclass.tpa~ 
+INCLUDE ~MonasticOrders/lib/fl#add_kit_ee.tpa~
+
+//FIGHTER/MONK 
+ADD_KIT ~QDMONK_F~ 
+	~QDMONK_F 2 2 0 0 2 0 0 2~ //clasweap.2da
+	~QDMONK_F 2 2 0 0 2 0 0 2 2 2 2 2 0 2 2 2 2 2 0 0 2 2 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONK_F 9 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONK_F 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONK_F 17 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONK_F 15 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONK_F 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
+	~QDMONK_F 0 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONK.2da~ //CLAB
+	~K_FT_H K_FT_E K_FT_HE K_FT_HL K_FT_D K_FT_G K_FT_HO~ 
+	~0x00004000	9~ 
+	~MO0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @301
+	SAY @302
+	SAY @303
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@303)
+		STR_VAR
+			kit_name = ~QDMONK_F~
+			hpclass = ~HPFC~
+			thiefscl = ~0 0 100 100 100 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clascolr = ~25 28 57 2 24~ 
+			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+	END
+END 
+
+COPY ~MonasticOrders/data/QDMONK.2da~ ~override/QDMONK_F.2da~ 
+
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 10 col ft // read column value
+		delta = %ft% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONK_F.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY	
+
+LAF qd_multiclass
+	STR_VAR 
+		kit_name = ~QDMONK_F~ 
+		kit_clab = ~QDMONK_F~ 
+		base_class = ~T~ 
+		mc_dir = ~MonasticOrders/lib/qd_multi~ 
+END 
+
+//CLERIC/MONK 
+ADD_KIT ~QDMONK_C~ 
+	~QDMONK_C 0 0 0 0 1 1 0 1~ //clasweap.2da
+	~QDMONK_C 0 0 0 0 1 1 0 1 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONK_C 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONK_C 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONK_C 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONK_C 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONK_C 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
+	~QDMONK_C 0 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONK.2da~ //CLAB
+	~K_CT_H K_CT_E K_CT_HE K_CT_HL K_CT_D K_CT_G K_CT_HO~ 
+	~0x00004000	15~ 
+	~FC0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @304
+	SAY @305
+	SAY @306
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@306)
+		STR_VAR
+			kit_name = ~QDMONK_C~
+			hpclass = ~HPMONK~
+			thiefscl = ~0 0 100 100 100 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clascolr = ~25 28 57 2 24~ 
+			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+	END
+END 
+
+COPY ~MonasticOrders/data/QDMONK.2da~ ~override/QDMONK_C.2da~ 
+
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 14 col ct // read column value
+		delta = %ct% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONK_C.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY	
+
+LAF qd_multiclass
+	STR_VAR 
+		kit_name = ~QDMONK_C~ 
+		kit_clab = ~QDMONK_C~ 
+		base_class = ~T~ 
+		mc_dir = ~MonasticOrders/lib/qd_multi~ 
+END 
+
+//MAGE/MONK 
+ADD_KIT ~QDMONK_M~ 
+	~QDMONK_M 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONK_M 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONK_M 0 9 0 9 9 0~ //abclasrq.2da 
+	~QDMONK_M 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONK_M 0 17 0 17 17 0~ //abdcdsrq.2da
+	~QDMONK_M 0 15 0 15 15 0~ //abdcscrq.2da 
+	~QDMONK_M 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
+	~QDMONK_M 0 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONK.2da~ //CLAB
+	~K_MT_H K_MT_E K_MT_HE K_MT_HL K_MT_D K_MT_G K_MT_HO~ 
+	~0x00004000	13~ 
+	~FM0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @307
+	SAY @308
+	SAY @309
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@309)
+		STR_VAR
+			kit_name = ~QDMONK_M~
+			hpclass = ~HPCM~
+			thiefscl = ~0 0 100 100 100 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clascolr = ~25 28 57 2 24~ 
+			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+	END
+END 
+
+COPY ~MonasticOrders/data/QDMONK.2da~ ~override/QDMONK_M.2da~ 
+
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 12 col mt // read column value
+		delta = %mt% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONK_M.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY	
+
+LAF qd_multiclass
+	STR_VAR 
+		kit_name = ~QDMONK_M~ 
+		kit_clab = ~QDMONK_M~ 
+		base_class = ~T~ 
+		mc_dir = ~MonasticOrders/lib/qd_multi~ 
+END 
+
+//FIGHTER/MONK 
+ADD_KIT ~QDMONKSS_F~ 
+	~QDMONKSS_F 2 2 0 0 2 0 0 2~ //clasweap.2da
+	~QDMONKSS_F 2 2 0 0 2 0 0 2 2 2 2 2 0 2 2 2 2 2 0 0 2 2 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKSS_F 9 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONKSS_F 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKSS_F 17 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONKSS_F 15 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONKSS_F 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
+	~QDMONKSS_F 0 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONK.2da~ //CLAB
+	~K_FT_H K_FT_E K_FT_HE K_FT_HL K_FT_D~ 
+	~0x00004000	9~ 
+	~MO0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @310
+	SAY @311
+	SAY @312
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@312)
+		STR_VAR
+			kit_name = ~QDMONKSS_F~
+			hpclass = ~HPFC~
+			thiefscl = ~0 0 100 0 0 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clascolr = ~67 25 79 23 24~ 
+			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+	END
+END 
+
+COPY ~MonasticOrders/data/QDMONKSS.2da~ ~override/QDMONKSS_F.2da~ 
+
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 10 col ft // read column value
+		delta = %ft% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONKSS_F.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY	
+
+LAF qd_multiclass
+	STR_VAR 
+		kit_name = ~QDMONKSS_F~ 
+		kit_clab = ~QDMONKSS_F~ 
+		base_class = ~T~ 
+		mc_dir = ~MonasticOrders/lib/qd_multi~ 
+END 
+
+//CLERIC/MONK 
+ADD_KIT ~QDMONKSS_C~ 
+	~QDMONKSS_C 0 0 0 0 1 1 0 1~ //clasweap.2da
+	~QDMONKSS_C 0 0 0 0 1 1 0 1 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKSS_C 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONKSS_C 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKSS_C 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONKSS_C 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONKSS_C 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
+	~QDMONKSS_C 0 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONK.2da~ //CLAB
+	~K_CT_H K_CT_E K_CT_HE K_CT_HL K_CT_D~ 
+	~0x00004000	15~ 
+	~FC0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @313
+	SAY @314
+	SAY @315
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@315)
+		STR_VAR
+			kit_name = ~QDMONKSS_C~
+			hpclass = ~HPMONK~
+			thiefscl = ~0 0 100 0 0 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clascolr = ~67 25 79 23 24~ 
+			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+	END
+END 
+
+COPY ~MonasticOrders/data/QDMONKSS.2da~ ~override/QDMONKSS_C.2da~ 
+
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 14 col ct // read column value
+		delta = %ct% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONKSS_C.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY	
+
+LAF qd_multiclass
+	STR_VAR 
+		kit_name = ~QDMONKSS_C~ 
+		kit_clab = ~QDMONKSS_C~ 
+		base_class = ~T~ 
+		mc_dir = ~MonasticOrders/lib/qd_multi~ 
+END 
+
+//ILLUSIONIST/DARK MOON MONK 
+ADD_KIT ~QDMONKDM_M~ 
+	~QDMONKDM_M 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONKDM_M 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKDM_M 0 9 0 9 9 0~ //abclasrq.2da 
+	~QDMONKDM_M 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKDM_M 0 17 0 17 17 0~ //abdcdsrq.2da
+	~QDMONKDM_M 0 15 0 15 15 0~ //abdcscrq.2da 
+	~QDMONKDM_M 0 0 1 0 0 1 0 0 1~ //alignmnt.2da
+	~QDMONKDM_M 0 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONK.2da~ //CLAB
+	~K_MT_H K_MT_E K_MT_HE K_MT_HO~ 
+	~0x00000400	13~ 
+	~FM0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @316
+	SAY @317
+	SAY @318
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@318)
+		STR_VAR
+			kit_name = ~QDMONKDM_M~
+			hpclass = ~HPCM~
+			thiefscl = ~0 0 0 100 100 100 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			clascolr = ~25 83 66 28 23~ 
+			// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+	END
+END 
+
+COPY ~MonasticOrders/data/QDMONKDM.2da~ ~override/QDMONKDM_M.2da~ 
+
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 12 col mt // read column value
+		delta = %mt% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONKDM_M.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY	
+
+LAF qd_multiclass
+	STR_VAR 
+		kit_name = ~QDMONKDM_M~ 
+		kit_clab = ~QDMONKDM_M~ 
+		base_class = ~T~ 
+		mc_dir = ~MonasticOrders/lib/qd_multi~ 
+END 
+
+//add illusionist abilities, if necessary
+ACTION_IF (FILE_EXISTS_IN_GAME ~CLABMA08.2da~) BEGIN 
+	LAF qd_multiclass
+		STR_VAR 
+			kit_name = ~QDMONKDM_M~ 
+			kit_clab = ~CLABMA08~ 
+			base_class = ~M~ 
+			mc_dir = ~MonasticOrders/lib/qd_multi~ 
+	END 
+END 
+
+//------------------------------------------------------
+// New Kits                                             
+// - Hin Fist: G/N Halflings with improved crit         
+// - Shining Hand: H/E/HE defenders of magic            
+// - Long Death: evil assassin types                    
+// - Broken One: tanky defenders of the weak            
+//------------------------------------------------------
+BEGIN @400
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~qd_monk_main.qd~) @11 
+REQUIRE_PREDICATE (ENGINE_IS ~bgee bg2ee iwdee eet~) @10 
+
+COPY_EXISTING ~sw1h01.itm~ ~override/qd_monk_kits.qd~ 
+
+INCLUDE ~MonasticOrders/lib/qd_multiclass.tpa~ 
+INCLUDE ~MonasticOrders/lib/fl#add_kit_ee.tpa~
+ 
+// HIN FIST
+ADD_KIT ~QDMONKHF~ 
+	~QDMONKHF 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONKHF 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKHF 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONKHF 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKHF 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONKHF 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONKHF 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
+	~QDMONKHF 1 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONKHF.2da~ //CLAB
+	~K_T_HL K_T_D K_T_G~ 
+	~0x00004000	4~ 
+	~MO0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @401
+	SAY @402
+	SAY @403
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@403)
+		STR_VAR
+			kit_name = ~QDMONKHF~
+			hpclass = ~HPMONK~
+			thiefscl = ~100 0 100 100 100 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			//clsrcreq = ~1 0 0 0 0 0 0~
+	END
+END 
+
+COPY ~MonasticOrders/data/QDHFFS.spl~ ~override~ //fighting style innate hinfist
+		SAY NAME1 @106
+		SAY NAME2 @106 
+		SAY UNIDENTIFIED_DESC @407 
+		SAY IDENTIFIED_DESC @407 
+
+COPY ~MonasticOrders/data/QDHFFS.2da~ ~override~ //fighting style table hinfist
+
+COPY ~MonasticOrders/data/QDHFFS2.spl~ ~override~ //precise strike
+		SAY NAME1 @405
+		SAY NAME2 @405 
+		SAY UNIDENTIFIED_DESC @406
+		SAY IDENTIFIED_DESC @406 
+		
+// SHINING HAND 
+ADD_KIT ~QDMONKSH~ 
+	~QDMONKSH 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONKSH 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKSH 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONKSH 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKSH 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONKSH 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONKSH 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
+	~QDMONKSH 0 0 1 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONKSH.2da~ //CLAB
+	~K_T_H K_T_E K_T_HE~ 
+	~0x00004000	4~ 
+	~MO0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @410
+	SAY @411
+	SAY @412
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@412)
+		STR_VAR
+			kit_name = ~QDMONKSH~
+			hpclass = ~HPMONK~
+			thiefscl = ~0 0 100 0 0 100 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			//clsrcreq = ~1 0 0 0 0 0 0~
+	END
+END 		
+
+COPY ~MonasticOrders/data/QDSHFS.spl~ ~override~ //fighting style innate shininghand
+		SAY NAME1 @106
+		SAY NAME2 @106 
+		SAY UNIDENTIFIED_DESC @417
+		SAY IDENTIFIED_DESC @417 
+
+COPY ~MonasticOrders/data/QDSHFS.2da~ ~override~ //fighting style table shinhand
+
+COPY ~MonasticOrders/data/QDSHFS3.spl~ ~override~ //nullifying blows
+		SAY NAME1 @413
+		SAY NAME2 @413 
+		SAY UNIDENTIFIED_DESC @414
+		SAY IDENTIFIED_DESC @414 
+
+COPY ~MonasticOrders/data/QDSHFS3.eff~ ~override~ //nullifying blows cast eff	
+COPY ~MonasticOrders/data/QDSHFS3_.spl~ ~override~ //nullifying blows subspl	
+
+COPY ~MonasticOrders/data/QDSHDF.spl~ ~override~ //defense style innate shininghand
+		SAY NAME1 @114
+		SAY NAME2 @114 
+		SAY UNIDENTIFIED_DESC @417
+		SAY IDENTIFIED_DESC @417 
+
+COPY ~MonasticOrders/data/QDSHDF.2da~ ~override~ //defense style table shinhand
+
+COPY ~MonasticOrders/data/QDSHDF4.spl~ ~override~ //deflect magic
+		SAY NAME1 @415
+		SAY NAME2 @415 
+		SAY UNIDENTIFIED_DESC @416
+		SAY IDENTIFIED_DESC @416 
+
+COPY ~MonasticOrders/data/QDSHDF4.eff~ ~override~ //deflect magic 1/round absorb
+
+//LONG DEATH 
+ADD_KIT ~QDMONKLD~ 
+	~QDMONKLD 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONKLD 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKLD 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONKLD 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKLD 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONKLD 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONKLD 0 1 1 0 1 1 0 1 1~ //alignmnt.2da
+	~QDMONKLD 1 0 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONKLD.2da~ //CLAB
+	~K_T_H K_T_E K_T_HE K_T_HL K_T_D K_T_G K_T_HO~ 
+	~0x00004000	4~ 
+	~MO0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @420
+	SAY @421
+	SAY @422
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@422)
+		STR_VAR
+			kit_name = ~QDMONKLD~
+			hpclass = ~HPMONK~
+			thiefscl = ~0 0 0 100 100 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			//clsrcreq = ~1 0 0 0 0 0 0~
+	END
+END 
+
+COPY ~MonasticOrders/data/QDLDFS.spl~ ~override~ //fighting style innate LD
+		SAY NAME1 @106
+		SAY NAME2 @106 
+		SAY UNIDENTIFIED_DESC @417
+		SAY IDENTIFIED_DESC @417 
+
+COPY ~MonasticOrders/data/QDLDFS.2da~ ~override~ //fighting style table LD
+
+COPY ~MonasticOrders/data/QDLDFS2.spl~ ~override~ //assassin strike
+		SAY NAME1 @423
+		SAY NAME2 @423 
+		SAY UNIDENTIFIED_DESC @424
+		SAY IDENTIFIED_DESC @424 
+
+//BROKEN ONE 
+ADD_KIT ~QDMONKBO~ 
+	~QDMONKBO 1 1 0 0 1 0 0 1~ //clasweap.2da
+	~QDMONKBO 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+	~QDMONKBO 0 9 0 0 9 0~ //abclasrq.2da 
+	~QDMONKBO 0 0 0 0 0 0~ //abclsmod.2da
+	~QDMONKBO 0 17 0 0 17 0~ //abdcdsrq.2da
+	~QDMONKBO 0 15 0 0 15 0~ //abdcscrq.2da 
+	~QDMONKBO 1 0 0 1 0 0 1 0 0~ //alignmnt.2da
+	~QDMONKBO 1 1 0 0 0 0~ //dualclas.2da
+	~MonasticOrders/data/QDMONKBO.2da~ //CLAB
+	~K_T_H K_T_D K_T_HO~ 
+	~0x00004000	4~ 
+	~MO0~ 
+	~* * * * * * * * * * * * * * * * * * * *~
+	SAY @430
+	SAY @431
+	SAY @432
+
+ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+	LAF fl#add_kit_ee
+		INT_VAR
+			briefdesc = RESOLVE_STR_REF(@432)
+		STR_VAR
+			kit_name = ~QDMONKBO~
+			hpclass = ~HPWAR~
+			thiefscl = ~0 0 100 0 0 0 0 0~ 
+			thiefskl = ~25 15~ 
+			backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+			crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+			traplimt = ~0~
+			//clsrcreq = ~1 0 0 0 0 0 0~
+	END
+END 	
+
+COPY ~MonasticOrders/data/QDBODF.spl~ ~override~ //defense style innate BO
+		SAY NAME1 @114
+		SAY NAME2 @114 
+		SAY UNIDENTIFIED_DESC @435
+		SAY IDENTIFIED_DESC @435 
+
+COPY ~MonasticOrders/data/QDBODF.2da~ ~override~ //defense style table BO
+
+COPY ~MonasticOrders/data/QDBODF3.spl~ ~override~ //martyr's strike
+		SAY NAME1 @433
+		SAY NAME2 @433 
+		SAY UNIDENTIFIED_DESC @434
+		SAY IDENTIFIED_DESC @434 	
+		
+
+COPY_EXISTING ~thac0.2da~ ~override~ 
+	COUNT_2DA_COLS cols // amount of columns
+	READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+	diff = 0
+	FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+		READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+		READ_2DA_ENTRY_FORMER rows 3 col thief // read column value
+		delta = %thief% - %fighter%
+		PATCH_IF (delta != diff) BEGIN 
+			++diff
+			INNER_ACTION BEGIN
+				COPY_EXISTING ~QDMONKHF.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				COPY_EXISTING ~QDMONKSH.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				COPY_EXISTING ~QDMONKLD.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 
+				COPY_EXISTING ~QDMONKBO.2da~ ~override~
+					COUNT_2DA_COLS clabcols
+					SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+			END 
+		END
+	END
+BUT_ONLY	
+
+//MULTICLASS KITS 
+//HF: F
+//SH: M
+//LD: F 
+//BO: C F
+
+ACTION_IF (FILE_EXISTS_IN_GAME ~qd_monk_multi.qd~) BEGIN 
+
+	//FIGHTER/HIN FIST 
+	ADD_KIT ~QDMONKHF_F~ 
+		~QDMONKHF_F 2 2 0 0 2 0 0 2~ //clasweap.2da
+		~QDMONKHF_F 2 2 0 0 2 0 0 2 2 2 2 2 0 2 2 2 2 2 0 0 2 2 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+		~QDMONKHF_F 9 9 0 0 9 0~ //abclasrq.2da 
+		~QDMONKHF_F 0 0 0 0 0 0~ //abclsmod.2da
+		~QDMONKHF_F 17 17 0 0 17 0~ //abdcdsrq.2da
+		~QDMONKHF_F 15 15 0 0 15 0~ //abdcscrq.2da 
+		~QDMONKHF_F 1 1 0 1 1 0 1 1 0~ //alignmnt.2da
+		~QDMONKHF_F 0 0 0 0 0 0~ //dualclas.2da
+		~MonasticOrders/data/QDMONKHF.2da~ //CLAB
+		~K_FT_HL K_FT_D K_FT_G~ 
+		~0x00004000	9~ 
+		~MO0~ 
+		~* * * * * * * * * * * * * * * * * * * *~
+		SAY @440
+		SAY @441
+		SAY @442
+
+	ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+		LAF fl#add_kit_ee
+			INT_VAR
+				briefdesc = RESOLVE_STR_REF(@442)
+			STR_VAR
+				kit_name = ~QDMONKHF_F~
+				hpclass = ~HPFC~
+				thiefscl = ~100 0 100 100 100 0 0 0~ 
+				thiefskl = ~25 15~ 
+				backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+				traplimt = ~0~
+				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+		END
+	END 
+
+	COPY ~MonasticOrders/data/QDMONKHF.2da~ ~override/QDMONKHF_F.2da~ 
+
+	COPY_EXISTING ~thac0.2da~ ~override~ 
+		COUNT_2DA_COLS cols // amount of columns
+		READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+		diff = 0
+		FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+			READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+			READ_2DA_ENTRY_FORMER rows 10 col ft // read column value
+			delta = %ft% - %fighter%
+			PATCH_IF (delta != diff) BEGIN 
+				++diff
+				INNER_ACTION BEGIN
+					COPY_EXISTING ~QDMONKHF_F.2da~ ~override~
+						COUNT_2DA_COLS clabcols
+						SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				END 
+			END
+		END
+	BUT_ONLY	
+
+	LAF qd_multiclass
+		STR_VAR 
+			kit_name = ~QDMONKHF_F~ 
+			kit_clab = ~QDMONKHF_F~ 
+			base_class = ~T~ 
+			mc_dir = ~MonasticOrders/lib/qd_multi~ 
+	END 
+
+
+	//MAGE/SHINING HAND MONK 
+	ADD_KIT ~QDMONKSH_M~ 
+		~QDMONKSH_M 1 1 0 0 1 0 0 1~ //clasweap.2da
+		~QDMONKSH_M 1 1 0 0 1 0 0 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+		~QDMONKSH_M 0 9 0 9 9 0~ //abclasrq.2da 
+		~QDMONKSH_M 0 0 0 0 0 0~ //abclsmod.2da
+		~QDMONKSH_M 0 17 0 17 17 0~ //abdcdsrq.2da
+		~QDMONKSH_M 0 15 0 15 15 0~ //abdcscrq.2da 
+		~QDMONKSH_M 1 1 1 1 1 1 1 1 1~ //alignmnt.2da
+		~QDMONKSH_M 0 0 0 0 0 0~ //dualclas.2da
+		~MonasticOrders/data/QDMONK.2da~ //CLAB
+		~K_MT_H K_MT_E K_MT_HE~ 
+		~0x00004000	13~ 
+		~FM0~ 
+		~* * * * * * * * * * * * * * * * * * * *~
+		SAY @445
+		SAY @446
+		SAY @447
+
+	ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+		LAF fl#add_kit_ee
+			INT_VAR
+				briefdesc = RESOLVE_STR_REF(@447)
+			STR_VAR
+				kit_name = ~QDMONKSH_M~
+				hpclass = ~HPCM~
+				thiefscl = ~0 0 100 0 0 100 0 0~ 
+				thiefskl = ~25 15~ 
+				backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+				traplimt = ~0~
+				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+		END
+	END 
+
+	COPY ~MonasticOrders/data/QDMONKSH.2da~ ~override/QDMONKSH_M.2da~ 
+
+	COPY_EXISTING ~thac0.2da~ ~override~ 
+		COUNT_2DA_COLS cols // amount of columns
+		READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+		diff = 0
+		FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+			READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+			READ_2DA_ENTRY_FORMER rows 12 col mt // read column value
+			delta = %mt% - %fighter%
+			PATCH_IF (delta != diff) BEGIN 
+				++diff
+				INNER_ACTION BEGIN
+					COPY_EXISTING ~QDMONKSH_M.2da~ ~override~
+						COUNT_2DA_COLS clabcols
+						SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				END 
+			END
+		END
+	BUT_ONLY	
+
+	LAF qd_multiclass
+		STR_VAR 
+			kit_name = ~QDMONKSH_M~ 
+			kit_clab = ~QDMONKSH_M~ 
+			base_class = ~T~ 
+			mc_dir = ~MonasticOrders/lib/qd_multi~ 
+	END 
+	
+	//FIGHTER/MONK 
+	ADD_KIT ~QDMONKLD_F~ 
+		~QDMONKLD_F 2 2 0 0 2 0 0 2~ //clasweap.2da
+		~QDMONKLD_F 2 2 0 0 2 0 0 2 2 2 2 2 0 2 2 2 2 2 0 0 2 2 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+		~QDMONKLD_F 9 9 0 0 9 0~ //abclasrq.2da 
+		~QDMONKLD_F 0 0 0 0 0 0~ //abclsmod.2da
+		~QDMONKLD_F 17 17 0 0 17 0~ //abdcdsrq.2da
+		~QDMONKLD_F 15 15 0 0 15 0~ //abdcscrq.2da 
+		~QDMONKLD_F 0 1 1 0 1 1 0 1 1~ //alignmnt.2da
+		~QDMONKLD_F 0 0 0 0 0 0~ //dualclas.2da
+		~MonasticOrders/data/QDMONK.2da~ //CLAB
+		~K_FT_H K_FT_E K_FT_HE K_FT_HL K_FT_D K_FT_G K_FT_HO~ 
+		~0x00004000	9~ 
+		~MO0~ 
+		~* * * * * * * * * * * * * * * * * * * *~
+		SAY @450
+		SAY @451
+		SAY @452
+
+	ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+		LAF fl#add_kit_ee
+			INT_VAR
+				briefdesc = RESOLVE_STR_REF(@452)
+			STR_VAR
+				kit_name = ~QDMONKLD_F~
+				hpclass = ~HPFC~
+				thiefscl =  ~0 0 0 100 100 0 0 0~ 
+				thiefskl = ~25 15~ 
+				backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+				traplimt = ~0~
+				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+		END
+	END 
+
+	COPY ~MonasticOrders/data/QDMONKLD.2da~ ~override/QDMONKLD_F.2da~ 
+
+	COPY_EXISTING ~thac0.2da~ ~override~ 
+		COUNT_2DA_COLS cols // amount of columns
+		READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+		diff = 0
+		FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+			READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+			READ_2DA_ENTRY_FORMER rows 10 col ft // read column value
+			delta = %ft% - %fighter%
+			PATCH_IF (delta != diff) BEGIN 
+				++diff
+				INNER_ACTION BEGIN
+					COPY_EXISTING ~QDMONKLD_F.2da~ ~override~
+						COUNT_2DA_COLS clabcols
+						SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				END 
+			END
+		END
+	BUT_ONLY	
+
+	LAF qd_multiclass
+		STR_VAR 
+			kit_name = ~QDMONKLD_F~ 
+			kit_clab = ~QDMONKLD_F~ 
+			base_class = ~T~ 
+			mc_dir = ~MonasticOrders/lib/qd_multi~ 
+	END 
+	
+	//FIGHTER/MONK 
+	ADD_KIT ~QDMONKBO_F~ 
+		~QDMONKBO_F 2 2 0 0 2 0 0 2~ //clasweap.2da
+		~QDMONKBO_F 2 2 0 0 2 0 0 2 2 2 2 2 0 2 2 2 2 2 0 0 2 2 0 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+		~QDMONKBO_F 9 9 0 0 9 0~ //abclasrq.2da 
+		~QDMONKBO_F 0 0 0 0 0 0~ //abclsmod.2da
+		~QDMONKBO_F 17 17 0 0 17 0~ //abdcdsrq.2da
+		~QDMONKBO_F 15 15 0 0 15 0~ //abdcscrq.2da 
+		~QDMONKBO_F 1 0 0 1 0 0 1 0 0~ //alignmnt.2da
+		~QDMONKBO_F 0 0 0 0 0 0~ //dualclas.2da
+		~MonasticOrders/data/QDMONK.2da~ //CLAB
+		~K_FT_H K_FT_D K_FT_HO~ 
+		~0x00004000	9~ 
+		~MO0~ 
+		~* * * * * * * * * * * * * * * * * * * *~
+		SAY @460
+		SAY @461
+		SAY @462
+
+	ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+		LAF fl#add_kit_ee
+			INT_VAR
+				briefdesc = RESOLVE_STR_REF(@462)
+			STR_VAR
+				kit_name = ~QDMONKBO_F~
+				hpclass = ~HPWAR~
+				thiefscl = ~0 0 100 0 0 0 0 0~ 
+				thiefskl = ~25 15~ 
+				backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+				traplimt = ~0~
+				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+		END
+	END 
+
+	COPY ~MonasticOrders/data/QDMONKBO.2da~ ~override/QDMONKBO_F.2da~ 
+
+	COPY_EXISTING ~thac0.2da~ ~override~ 
+		COUNT_2DA_COLS cols // amount of columns
+		READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+		diff = 0
+		FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+			READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+			READ_2DA_ENTRY_FORMER rows 10 col ft // read column value
+			delta = %ft% - %fighter%
+			PATCH_IF (delta != diff) BEGIN 
+				++diff
+				INNER_ACTION BEGIN
+					COPY_EXISTING ~QDMONKBO_F.2da~ ~override~
+						COUNT_2DA_COLS clabcols
+						SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				END 
+			END
+		END
+	BUT_ONLY	
+
+	LAF qd_multiclass
+		STR_VAR 
+			kit_name = ~QDMONKBO_F~ 
+			kit_clab = ~QDMONKBO_F~ 
+			base_class = ~T~ 
+			mc_dir = ~MonasticOrders/lib/qd_multi~ 
+	END 
+
+	//CLERIC/MONK 
+	ADD_KIT ~QDMONKBO_C~ 
+		~QDMONKBO_C 0 0 0 0 1 1 0 1~ //clasweap.2da
+		~QDMONKBO_C 0 0 0 0 1 1 0 1 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0~ //weapprof.2da 
+		~QDMONKBO_C 0 9 0 0 9 0~ //abclasrq.2da 
+		~QDMONKBO_C 0 0 0 0 0 0~ //abclsmod.2da
+		~QDMONKBO_C 0 17 0 0 17 0~ //abdcdsrq.2da
+		~QDMONKBO_C 0 15 0 0 15 0~ //abdcscrq.2da 
+		~QDMONKBO_C 1 0 0 1 0 0 1 0 0~ //alignmnt.2da
+		~QDMONKBO_C 0 0 0 0 0 0~ //dualclas.2da
+		~MonasticOrders/data/QDMONK.2da~ //CLAB
+		~K_CT_H K_CT_D K_CT_HO~ 
+		~0x00004000	15~ 
+		~FC0~ 
+		~* * * * * * * * * * * * * * * * * * * *~
+		SAY @455
+		SAY @456
+		SAY @457
+
+	ACTION_IF GAME_IS ~bgee bg2ee iwdee eet~ THEN BEGIN
+		LAF fl#add_kit_ee
+			INT_VAR
+				briefdesc = RESOLVE_STR_REF(@457)
+			STR_VAR
+				kit_name = ~QDMONKBO_C~
+				hpclass = ~HPWAR~
+				thiefscl = ~0 0 100 0 0 0 0 0~ 
+				thiefskl = ~25 15~ 
+				backstab = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				sneakatt = ~1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1~
+				crippstr = ~0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0~
+				traplimt = ~0~
+				// clsrcreq = ~1 0 0 0 0 0 0~ this should inherent multiclass parents
+		END
+	END 
+
+	COPY ~MonasticOrders/data/QDMONKBO.2da~ ~override/QDMONKBO_C.2da~ 
+
+	COPY_EXISTING ~thac0.2da~ ~override~ 
+		COUNT_2DA_COLS cols // amount of columns
+		READ_2DA_ENTRIES_NOW rows cols // read all file into memory 
+		diff = 0
+		FOR (col = 1; col < cols; ++col) BEGIN // iterate over rows
+			READ_2DA_ENTRY_FORMER rows 1 col fighter // read column value
+			READ_2DA_ENTRY_FORMER rows 14 col ct // read column value
+			delta = %ct% - %fighter%
+			PATCH_IF (delta != diff) BEGIN 
+				++diff
+				INNER_ACTION BEGIN
+					COPY_EXISTING ~QDMONKBO_C.2da~ ~override~
+						COUNT_2DA_COLS clabcols
+						SET_2DA_ENTRY 0 col clabcols  ~AP_QDMNKTH~ 	
+				END 
+			END
+		END
+	BUT_ONLY	
+
+	LAF qd_multiclass
+		STR_VAR 
+			kit_name = ~QDMONKBO_C~ 
+			kit_clab = ~QDMONKBO_C~ 
+			base_class = ~T~ 
+			mc_dir = ~MonasticOrders/lib/qd_multi~ 
+	END 
+END 
+
+
+//------------------------------------------------------
+// MOoF Item Restriction Update Component                                            
+// This component remakes the spell that affects item 
+// usability for Monks in this mod. Apply it towards the 
+// mod installation process if you add lots of items or
+// mods that make sweeping changes to item behavior.         
+//------------------------------------------------------
+BEGIN @500
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~qd_monk_main.qd~) @11 
+REQUIRE_PREDICATE (ENGINE_IS ~bgee bg2ee iwdee eet~) @10 
+
+//build item restrictions spell 
+// filters are: 
+// 1) is two-handed and classified as halberd/staff/spear/greatsword
+// 2) is armor and uses an armor animation (2a, 3a or 4a)
+// 3) is a shield and uses shield animations 
+// 4) is a helmet and has an animation (except wings and circlet) 
+COPY ~MonasticOrders/data/QDBLANK.spl~ ~override/QDMNKIR.spl~ 
+COPY_EXISTING_REGEXP GLOB ~.*\.itm~ ~override~ //copies all item files
+	PATCH_IF (SOURCE_SIZE > 0x71) BEGIN // avoid crashing on empty items
+		READ_BYTE 0x18 flags1
+		READ_SHORT 0x1c type 
+		READ_SHORT 0x22 anim 
+		TEXT_SPRINT res ~%SOURCE_RES%~
+		PATCH_IF ((type = 2) AND ((anim = 16690) OR (anim = 16691) OR (anim = 16692)) ) BEGIN 
+			INNER_ACTION BEGIN 
+				COPY_EXISTING ~QDMNKIR.spl~ ~override~ 
+					LPF ADD_SPELL_EFFECT INT_VAR opcode = 180 parameter1 = 9382 parameter2 = 0 target = 2 timing = 9 STR_VAR resource = EVAL ~%res%~  END
+			END 
+		END 
+		PATCH_IF ((flags1 BAND 0x2) AND ((type = 20) OR (type = 26) OR (type = 29) OR (type = 30)) ) BEGIN 
+			INNER_ACTION BEGIN 
+				COPY_EXISTING ~QDMNKIR.spl~ ~override~ 
+					LPF ADD_SPELL_EFFECT INT_VAR opcode = 180 parameter1 = 9382 parameter2 = 0 target = 2 timing = 9 STR_VAR resource = EVAL ~%res%~  END
+			END 
+		END 
+		PATCH_IF ((type = 12) AND ((anim = 12868) OR (anim = 13124) OR (anim = 13380) OR (anim = 12612) OR (anim = 12355) OR (anim = 12611) OR (anim = 12867) OR (anim = 13123) OR (anim = 13379) OR (anim = 13635) OR (anim = 13891) OR (anim = 14147)) ) BEGIN 
+			INNER_ACTION BEGIN 
+				COPY_EXISTING ~QDMNKIR.spl~ ~override~ 
+					LPF ADD_SPELL_EFFECT INT_VAR opcode = 180 parameter1 = 9382 parameter2 = 0 target = 2 timing = 9 STR_VAR resource = EVAL ~%res%~  END
+			END 
+		END 
+		PATCH_IF ((type = 7) AND ((anim != 8225) AND (anim != 16970) AND (anim != 22361) AND (anim != 22362))) BEGIN 
+			INNER_ACTION BEGIN 
+				COPY_EXISTING ~QDMNKIR.spl~ ~override~ 
+					LPF ADD_SPELL_EFFECT INT_VAR opcode = 180 parameter1 = 9382 parameter2 = 0 target = 2 timing = 9 STR_VAR resource = EVAL ~%res%~  END
+			END 
+		END 
+	END
+BUT_ONLY 
