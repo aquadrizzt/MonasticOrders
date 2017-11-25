@@ -48,27 +48,62 @@ END
 
 IF
 	Gender(Myself,MALE)
-	OR(3)
-		Race(Myself,DWARF)
-		Race(Myself,HALFLING)
-		Race(Myself,GNOME)
+	Race(Myself,DWARF)
 	Global("QD_MONK_ANIM","LOCALS",0)
 THEN
 	RESPONSE #100
 		SetGlobal("QD_MONK_ANIM","LOCALS",1)
-		Polymorph(QD_MONK_MALE_SHORT)
+		Polymorph(QD_MONK_MALE_DWARF)
 END
 
 IF
 	Gender(Myself,FEMALE)
-	OR(3)
-		Race(Myself,DWARF)
-		Race(Myself,HALFLING)
-		Race(Myself,GNOME)
+	Race(Myself,DWARF)
 	Global("QD_MONK_ANIM","LOCALS",0)
 THEN
 	RESPONSE #100
 		SetGlobal("QD_MONK_ANIM","LOCALS",1)
-		Polymorph(QD_MONK_FEMALE_SHORT)
+		Polymorph(QD_MONK_FEMALE_DWARF)
+END
+
+IF
+	Gender(Myself,MALE)
+	Race(Myself,GNOME)
+	Global("QD_MONK_ANIM","LOCALS",0)
+THEN
+	RESPONSE #100
+		SetGlobal("QD_MONK_ANIM","LOCALS",1)
+		Polymorph(QD_MONK_MALE_GNOME)
+END
+
+IF
+	Gender(Myself,FEMALE)
+	Race(Myself,GNOME)
+	Global("QD_MONK_ANIM","LOCALS",0)
+THEN
+	RESPONSE #100
+		SetGlobal("QD_MONK_ANIM","LOCALS",1)
+		Polymorph(QD_MONK_FEMALE_GNOME)
+END
+
+
+IF
+	Gender(Myself,MALE)
+	Race(Myself,HALFLING)
+	Global("QD_MONK_ANIM","LOCALS",0)
+THEN
+	RESPONSE #100
+		SetGlobal("QD_MONK_ANIM","LOCALS",1)
+		Polymorph(QD_MONK_MALE_HALFLING)
+END
+
+IF
+	Gender(Myself,FEMALE)
+	Race(Myself,HALFLING)
+	Global("QD_MONK_ANIM","LOCALS",0)
+THEN
+	RESPONSE #100
+		SetGlobal("QD_MONK_ANIM","LOCALS",1)
+		Polymorph(QD_MONK_FEMALE_HALFLING)
 END
 
