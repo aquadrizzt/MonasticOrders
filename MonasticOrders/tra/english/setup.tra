@@ -1,6 +1,7 @@
 @10 = ~This component is only available for the Enhanced Editions.~ 
 @11 = ~This component requires the Core Revisions component.~ 
 @12 = ~This component requires the Expanded Races component.~ 
+@13 = ~This component requires the Enhanced Engine v2.0 or later.~ 
 
 @100 = ~Core Revisions~ 
 @200 = ~Expanded Races for Monks~ 
