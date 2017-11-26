@@ -102,7 +102,8 @@ This component allows non-Human races to become Monks. Some races also gain acce
 - Sun Soul Monk: Human, Half-Elf, Elf, Dwarf, Halfling 
 - Dark Moon Monk: Human, Half-Elf, Elf, Half-Orc 
 
-### Multiclassing for Monks 
+### Multiclassing for Monks (BGEE/BG2EE/EET only)
+
 This component allows Monks to multiclass. Each kit has specific options for multi-classing, as listed here. 
 - Monk: Fighter, Cleric, Mage (Illusionist for Gnomes) 
 - Sun Soul Monk: Fighter, Cleric 
