@@ -603,7 +603,7 @@ BUT_ONLY
 //------------------------------------------------------
 BEGIN @300
 REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~qd_monk_main.qd~) @11 
-REQUIRE_PREDICATE (ENGINE_IS ~bgee bg2ee iwdee eet~) @10 
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~enginest.2da~) @13 
 
 COPY_EXISTING ~sw1h01.itm~ ~override/qd_monk_multi.qd~ 
 
